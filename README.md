@@ -1,76 +1,92 @@
-# Auto Cutout Pro
+# ✂️ Auto Cutout Pro
 
-**Blender 5.0.1**
+> **Transform Images into Meshes in One Click.**  
+> High-precision, optimized cutouts directly in Blender's Image Editor.
 
-[English](#english) | [日本語](#japanese)
+Blender 4.2+ | [English](#english) | [日本語](#japanese)
 
 ---
 
+<br>
+
 <a name="english"></a>
-## English
+## 🚀 Features
 
-Create high-quality mesh cutouts from images with sub-pixel precision, holes, and smoothing directly in Blender's Image Editor.
+**Auto Cutout Pro** automates the creation of mesh cutouts from images. Load an image in the Image Editor, adjust parameters, and generate an optimized mesh plane without manual tracing.
 
-### Features
-- **Marching Squares Algorithm**: Generates clean geometry matching the alpha channel.
-- **Sub-pixel Precision**: Smooth curves and accurate boundaries.
-- **Hole Support**: Correctly handles holes and nested islands.
-- **Smoothing & Offset**: Blur edges or dilate/erode the mask before generation.
-- **Simplification**: Reduce vertex count with Douglas-Peucker algorithm.
-- **Optimization**: Built-in Limited Dissolve and Decimate options.
-- **Material Support**: Automatically creates a transparent material for the cutout.
-- **Color Keying**: Experimental support for Green Screen/Color Key removal.
+### ⚡ Instant Workflow
+- **One-Click Generation**: Turn transparent images (PNG, TGA) or color-keyed photos into mesh planes instantly.
+- **Sub-Pixel Precision**: Powered by the **Marching Squares** algorithm to capture curves smoother than pixel art.
 
-### Installation
-1. Download the repository as a ZIP file (or the release zip).
-2. In Blender, go to `Edit > Preferences > Add-ons`.
-3. Click `Install...` and select the ZIP file.
-4. Enable "Auto Cutout Pro" in the list.
-5. Check (Enable) the box next to it.
+### 🔧 Smart Optimization
+- **Game-Ready Topology**: Automatically applies **Limited Dissolve** and **Triangulation** to create clean, efficient meshes usable in game engines.
+- **Vertex Limit Control**: Set a specific **Target Vertex Count** (e.g., 500 verts), and the tool will simplify the mesh to match your budget perfectly.
 
-### Usage
+### 🎨 Advanced Control
+- **Offset (Dilate/Erode)**: Need a thick outline or a tighter mask? Adjust the **Offset** to expand or shrink the mesh boundary.
+- **Hole Support**: Donuts, text, and complex logos? No problem. Nested holes are handled correctly.
+- **Material Auto-Setup**: Generates and assigns a transparent material automatically so you can see the result immediately.
+
+<br>
+
+## 📦 Installation
+1. Download the latest version from the [Releases](https://github.com/akiRAM2/AutoCutPro/releases) page.
+2. Open Blender: `Edit > Preferences > Add-ons`.
+3. Click **Install...** and select the ZIP file.
+4. Search for "Auto Cutout Pro" and enable the checkbox.
+
+## 🎮 Usage
 1. Open the **Image Editor**.
-2. Load an image with transparency (or use Keying mode).
-3. Open the Sidebar (`N`) and find the **Auto Cutout Pro** tab.
-4. Adjust settings (Threshold, Smoothing, etc.).
+2. Load your image.
+3. Open the Sidebar (`N`) → **Auto Cutout Pro** tab.
+4. Adjust settings (Optimization, Offset, etc.).
 5. Click **Generate Cutout**.
 
 ---
 
+<br>
+
 <a name="japanese"></a>
-## 日本語
+## 🇯🇵 主な機能
 
-画像のアルファチャンネル（透明度）を利用して、Blenderの画像エディターから直接、高品質なメッシュのカットアウト（切り抜き）を作成するアドオンです。
+**Auto Cutout Pro** は、画像からメッシュのカットアウトを自動生成するツールです。画像エディターで画像を読み込み、パラメータを調整するだけで、手動トレースなしに最適化されたメッシュを生成します。
 
-### 機能
-- **マーチングスクエアアルゴリズム**: アルファチャンネルに沿ったきれいな形状を生成します。
-- **サブピクセル精度**: 滑らかな曲線と正確な境界線を実現します。
-- **穴のサポート**: ドーナツ状の形状や、入れ子になった穴も正しく処理します。
-- **スムージングとオフセット**: 生成前にエッジをぼかしたり、マスクを膨張・収縮させることができます。
-- **単純化 (Simplify)**: Douglas-Peuckerアルゴリズムで頂点数を削減し、ローポリ化します。
-- **最適化**: リミテッド溶解（Limited Dissolve）やデシメート（Decimate）機能を内蔵。
-- **マテリアル**: カットアウト用の透明マテリアルを自動作成します。
-- **カラーキー**: グリーンスクリーンなどのクロマキー合成（実験的機能）もサポート。
+### ⚡ 爆速ワークフロー
+- **ワンクリック生成**: アルファ付き画像や背景色を指定した画像を、一瞬でメッシュ化します。
+- **高精度アルゴリズム**: Marching Squares法により、ピクセルのカクつきを補間した滑らかな曲線を生成します。
 
-### インストール方法
-1. リポジトリをZIPファイルとしてダウンロードします（またはリリースのzip）。
-2. Blenderで `編集 > プリファレンス > アドオン` を開きます。
-3. `インストール...` をクリックし、ZIPファイルを選択します。
-4. リストから "Auto Cutout Pro" を有効にします。
+### 🔧 最適化・ゲーム用途
+- **トポロジー最適化**: 「Limited Dissolve（溶解）」と「Triangulate（三角形化）」を標準でサポート。生成した瞬間からゲームエンジンで使えるきれいなメッシュを出力します。
+- **頂点数リミット**: 「ポリゴン数を1000以下にしたい」といった要望に応えます。ターゲット数を指定すれば、形状を保ちつつ自動で削減します。
 
-### 使い方
-1. **画像エディター**を開きます。
-2. 背景が透明な画像を読み込みます（またはカラーキーモードを使用）。
-3. サイドバー（`N`キー）を開き、**Auto Cutout Pro** タブを見つけます。
-4. 設定（閾値、スムージングなど）を調整します。
-5. **Generate Cutout（カットアウト生成）** をクリックします。
+### 🎨 高機能・微調整
+- **オフセット（膨張/収縮）**: メッシュの輪郭を太らせたり、逆に少し内側に収めたりといった微調整がスライダー一つで可能です。
+- **完全な穴対応**: 文字やロゴのような、入れ子になった複雑な穴あき形状も完璧にメッシュ化します。
+- **マテリアル自動設定**: 生成と同時に透明マテリアルを作成・適用するため、すぐにレンダリング結果を確認できます。
+
+<br>
+
+## 📦 インストール
+1. [Releases](https://github.com/akiRAM2/AutoCutPro/releases) ページから最新のZIPファイルをダウンロードします。
+2. Blenderを開き、`編集 > プリファレンス > アドオン` へ移動します。
+3. **インストール...** を押し、ダウンロードしたZIPファイルを選択します。
+4. "Auto Cutout Pro" を検索し、チェックを入れて有効化します。
+
+## 🎮 使い方
+1. **画像エディター** を開きます。
+2. 画像を読み込みます。
+3. サイドバー(`N`) の **Auto Cutout Pro** タブを開きます。
+4. 設定（最適化やオフセットなど）を調整します。
+5. **Generate Cutout（カットアウト生成）** をクリック！
+
+<br>
 
 ---
 
-## Author / 著者
-akiRAM
+### Author
+**akiRAM**
 
-## Disclaimer / 免責事項
+### Disclaimer / 免責事項
 This software was generated by an AI. The author assumes no responsibility for any issues, damages, or unintended behaviors caused by the use of this software. Use it at your own risk.
 
 本ソフトウェアはAIによって生成されました。著者は、本ソフトウェアの使用によって生じたいかなる問題、損害、または予期しない動作についても責任を負いません。自己責任でご使用ください。
