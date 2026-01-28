@@ -3,6 +3,7 @@ import bmesh
 from . import core
 import math
 import importlib
+import numpy as np
 
 class AUTO_CUTOUT_OT_Generate(bpy.types.Operator):
     bl_idname = "image.auto_cutout_generate"
