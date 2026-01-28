@@ -1,6 +1,8 @@
 import bpy
 import bmesh
 from . import core
+import math
+import importlib
 
 class AUTO_CUTOUT_OT_Generate(bpy.types.Operator):
     bl_idname = "image.auto_cutout_generate"
@@ -58,20 +60,14 @@ class AUTO_CUTOUT_OT_Generate(bpy.types.Operator):
             else:
                 simplified = loops
 
-            # 5. Create Curve Object
-            create_curve_cutout(context, image, simplified, w, h, origin_mode, up_axis)
-            
-            print("[AC DEBUG] Finished successfully.")
-            
-        except Exception as e:
-            self.report({'ERROR'}, f"Error: {e}")
-            import traceback
-            traceback.print_exc()
-            return {'CANCELLED'}
-            
-        return {'FINISHED'}
+    # 5. Create Curve Object
+    create_curve_cutout(context, image, simplified, w, h, origin_mode, up_axis)
+    
+    print("[AC DEBUG] Finished successfully.")
 
 def create_curve_cutout(context, image, loops, w, h, origin_mode, up_axis):
+    print(f"[AC DEBUG] Creating Curve. Image parsed size: {w}x{h} (with padding)")
+    
     # Create Curve Data
     curve_data = bpy.data.curves.new(name=f"Curve_{image.name}", type='CURVE')
     curve_data.dimensions = '2D'
@@ -81,19 +77,31 @@ def create_curve_cutout(context, image, loops, w, h, origin_mode, up_axis):
     real_w = w - 2.0
     real_h = h - 2.0
     
+    if real_w <= 0 or real_h <= 0:
+        print(f"[AC ERROR] Invalid dimensions: {real_w}x{real_h}")
+        return
+
     aspect = real_w / max(real_w, real_h)
     aspect_h = real_h / max(real_w, real_h)
+    
+    print(f"[AC DEBUG] Aspect Ratio: {aspect:.4f} x {aspect_h:.4f}")
     
     off_x, off_y = 0.5, 0.5
     if origin_mode == 'BOTTOM': off_y = 0.0
     
-    for loop in loops:
+    total_points = 0
+    nan_count = 0
+    
+    for loop_idx, loop in enumerate(loops):
         spline = curve_data.splines.new('POLY')
         spline.use_cyclic_u = True
         
-        # Transform points
         point_count = len(loop)
         spline.points.add(point_count - 1)
+        total_points += point_count
+        
+        if loop_idx == 0:
+            print(f"[AC DEBUG] Processing Loop 0 (Outer?). Points: {point_count}")
         
         for i, (y, x) in enumerate(loop):
             # Remove padding offset (-1.0)
@@ -106,10 +114,20 @@ def create_curve_cutout(context, image, loops, w, h, origin_mode, up_axis):
             lx = (u - off_x) * aspect
             ly = (v - off_y) * aspect_h
             
+            # Sanity Check
+            if importlib.util.find_spec("math") and (math.isnan(lx) or math.isnan(ly)):
+                nan_count += 1
+                lx, ly = 0, 0
+            
             if up_axis == 'Y':
                 spline.points[i].co = (lx, ly, 0, 1) # Flat
             else:
                 spline.points[i].co = (lx, 0, ly, 1) # Standing
+                
+            if loop_idx == 0 and i < 3:
+                 print(f"[AC DEBUG] L0 P{i}: Raw({x:.2f}, {y:.2f}) -> UV({u:.2f}, {v:.2f}) -> Local({lx:.3f}, {ly:.3f})")
+
+    print(f"[AC DEBUG] Curve Created. Total Points: {total_points}, NaNs found: {nan_count}")
     
     # Create Object
     obj = bpy.data.objects.new(f"Cutout_{image.name}", curve_data)
@@ -120,6 +138,8 @@ def create_curve_cutout(context, image, loops, w, h, origin_mode, up_axis):
     obj.select_set(True)
     bpy.ops.object.convert(target='MESH')
     mesh = obj.data
+    
+    print(f"[AC DEBUG] Converted to Mesh. Vertices: {len(mesh.vertices)}, Polygons: {len(mesh.polygons)}")
     
     # UV Mapping
     bm = bmesh.new()
