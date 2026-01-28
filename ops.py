@@ -106,11 +106,22 @@ def create_curve_cutout(context, image, loops, w, h, origin_mode, up_axis):
         spline.use_cyclic_u = True
         
         point_count = len(loop)
+        # Verify initial point count
+        initial_len = len(spline.points)
+        if initial_len != 1:
+            print(f"[AC WARNING] Spline initialized with {initial_len} points (expected 1).")
+            
         spline.points.add(point_count - 1)
+        
+        current_len = len(spline.points)
+        if current_len != point_count:
+             print(f"[AC ERROR] Point count mismatch! Loop: {point_count}, Spline: {current_len}")
+        
         total_points += point_count
         
-        if loop_idx == 0:
-            print(f"[AC DEBUG] Processing Loop 0 (Outer?). Points: {point_count}")
+        # Track bounds for this loop
+        min_x, max_x = float('inf'), float('-inf')
+        min_y, max_y = float('inf'), float('-inf')
         
         for i, (y, x) in enumerate(loop):
             # Remove padding offset (-1.0)
@@ -127,14 +138,21 @@ def create_curve_cutout(context, image, loops, w, h, origin_mode, up_axis):
             if importlib.util.find_spec("math") and (math.isnan(lx) or math.isnan(ly)):
                 nan_count += 1
                 lx, ly = 0, 0
+                
+            # Bounds check
+            min_x = min(min_x, lx)
+            max_x = max(max_x, lx)
+            min_y = min(min_y, ly)
+            max_y = max(max_y, ly)
             
             if up_axis == 'Y':
                 spline.points[i].co = (lx, ly, 0, 1) # Flat
             else:
                 spline.points[i].co = (lx, 0, ly, 1) # Standing
                 
-            if loop_idx == 0 and i < 3:
-                 print(f"[AC DEBUG] L0 P{i}: Raw({x:.2f}, {y:.2f}) -> UV({u:.2f}, {v:.2f}) -> Local({lx:.3f}, {ly:.3f})")
+        # Check for extreme coordinates in this loop
+        if max_x > 1000 or min_x < -1000 or max_y > 1000 or min_y < -1000:
+             print(f"[AC WARNING] Extreme coordinates in Loop {loop_idx}: X({min_x:.2f}~{max_x:.2f}), Y({min_y:.2f}~{max_y:.2f})")
 
     print(f"[AC DEBUG] Curve Created. Total Points: {total_points}, NaNs found: {nan_count}")
     
