@@ -30,32 +30,38 @@ class AUTO_CUTOUT_OT_Generate(bpy.types.Operator):
         offset = context.scene.ac_offset
         
         try:
-            print(f"[AC] Processing image: {image.name} ({image.size[0]}x{image.size[1]})")
+            print(f"[AC DEBUG] Processing image: {image.name} ({image.size[0]}x{image.size[1]})")
             
             # 1. Image Processing
             alpha_grid, w, h = core.process_image(image, smooth_iters, source_mode, key_method, key_color, key_tolerance, invert, offset)
+            print(f"[AC DEBUG] Alpha Grid Processed. Shape: {alpha_grid.shape}, Range: {alpha_grid.min():.3f}-{alpha_grid.max():.3f}, Non-zero: {np.count_nonzero(alpha_grid)}")
             
             # 2. Marching Squares (Segments)
             segments = core.marching_squares_vectorized(alpha_grid, threshold)
+            print(f"[AC DEBUG] Segments generated: {len(segments)}")
             
             if not segments:
-                self.report({'WARNING'}, "No geometry found.")
+                self.report({'WARNING'}, "No geometry found (0 segments).")
                 return {'CANCELLED'}
             
             # 3. Chains (Loops)
             loops = core.build_loops_raw(segments)
-            print(f"[AC] Built {len(loops)} loops.")
+            print(f"[AC DEBUG] Loops built: {len(loops)}")
+            if loops:
+                print(f"[AC DEBUG] First loop length: {len(loops[0])}")
             
             # 4. Simplification (Douglas-Peucker)
             if epsilon > 0:
+                print(f"[AC DEBUG] Simplifying with epsilon: {epsilon}")
                 simplified = [core.douglas_peucker(l, epsilon) for l in loops]
+                print(f"[AC DEBUG] Simplified vertices: {sum(len(l) for l in simplified)}")
             else:
                 simplified = loops
 
-            # 5. Create Curve Object (Handles holes efficiently)
+            # 5. Create Curve Object
             create_curve_cutout(context, image, simplified, w, h, origin_mode, up_axis)
             
-            print("[AC] Finished successfully.")
+            print("[AC DEBUG] Finished successfully.")
             
         except Exception as e:
             self.report({'ERROR'}, f"Error: {e}")

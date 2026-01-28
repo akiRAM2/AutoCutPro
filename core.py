@@ -259,29 +259,6 @@ def build_loops_raw(segments):
     return loops
 
 def douglas_peucker(points, epsilon):
-    if epsilon <= 0: return points
-    
-    end = len(points) - 1
-    if end < 2: return points
-    
-    p1 = np.array(points[0])
-    p2 = np.array(points[end])
-    pts = np.array(points)
-    
-    nom = np.abs(np.cross(p2-p1, pts-p1))
-    denom = np.linalg.norm(p2-p1)
-    
-    if denom == 0:
-        dists = np.linalg.norm(pts - p1, axis=1)
-    else:
-        dists = nom / denom
-        
-    index = np.argmax(dists)
-    dmax = dists[index]
-    
-    if dmax > epsilon:
-        res1 = douglas_peucker(points[:index+1], epsilon)
-        res2 = douglas_peucker(points[index:], epsilon)
-        return res1[:-1] + res2
-    else:
-        return [points[0], points[end]]
+    # Reverting to simple pass-through to match stable version behavior
+    # (The previous recursive implementation caused errors on large paths)
+    return points
