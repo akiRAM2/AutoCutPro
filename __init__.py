@@ -6,8 +6,8 @@ import numpy as np
 bl_info = {
     "name": "Auto Cutout Pro",
     "description": "Create high-quality mesh cutouts with sub-pixel precision, holes, and smoothing.",
-    "author": "Antigravity",
-    "version": (0, 0, 5),
+    "author": "akiRAM",
+    "version": (0, 9, 9),
     "blender": (4, 2, 0),
     "location": "Image Editor > Sidebar > Auto Cutout",
     "category": "Image",
