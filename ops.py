@@ -60,10 +60,18 @@ class AUTO_CUTOUT_OT_Generate(bpy.types.Operator):
             else:
                 simplified = loops
 
-    # 5. Create Curve Object
-    create_curve_cutout(context, image, simplified, w, h, origin_mode, up_axis)
-    
-    print("[AC DEBUG] Finished successfully.")
+            # 5. Create Curve Object
+            create_curve_cutout(context, image, simplified, w, h, origin_mode, up_axis)
+            
+            print("[AC DEBUG] Finished successfully.")
+            
+        except Exception as e:
+            self.report({'ERROR'}, f"Error: {e}")
+            import traceback
+            traceback.print_exc()
+            return {'CANCELLED'}
+            
+        return {'FINISHED'}
 
 def create_curve_cutout(context, image, loops, w, h, origin_mode, up_axis):
     print(f"[AC DEBUG] Creating Curve. Image parsed size: {w}x{h} (with padding)")
