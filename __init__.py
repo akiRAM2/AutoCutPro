@@ -7,9 +7,9 @@ bl_info = {
     "name": "Auto Cutout Pro",
     "description": "Create high-quality mesh cutouts with sub-pixel precision, holes, and smoothing.",
     "author": "akiRAM",
-    "version": (0, 9, 9),
+    "version": (1, 0, 0),
     "blender": (4, 2, 0),
-    "location": "Image Editor > Sidebar > Auto Cutout",
+    "location": "Image Editor > Sidebar > Auto Cutout Pro",
     "category": "Image",
 }
 
@@ -799,13 +799,13 @@ def register():
     bpy.types.Scene.ac_origin_mode = bpy.props.EnumProperty(items=[('CENTER', "Center", ""), ('BOTTOM', "Bottom", "")], name="Origin", default='BOTTOM', description="Set origin point of the generated mesh")
     bpy.types.Scene.ac_up_axis = bpy.props.EnumProperty(items=[('Z', "Z-Up", ""), ('Y', "Y-Up", "")], name="Up Axis", default='Y', description="Orientation of the generated mesh")
     bpy.types.Scene.ac_target_count = bpy.props.IntProperty(
-        name="Target Vertex Count", default=0, min=0, description="Auto-decimate mesh using Collapse to reach target vertex count (0=Disabled)"
+        name="Target Vertex Count", default=10000, min=0, description="Auto-decimate mesh using Collapse to reach target vertex count (0=Disabled)"
     )
     bpy.types.Scene.ac_use_limited_dissolve = bpy.props.BoolProperty(
-        name="Limited Dissolve", default=False, description="Dissolve flat faces and colinear edges (5 deg limit). Reduces geometry but may affect topology."
+        name="Limited Dissolve", default=True, description="Dissolve flat faces and colinear edges (5 deg limit). Reduces geometry but may affect topology."
     )
     bpy.types.Scene.ac_use_triangulation = bpy.props.BoolProperty(
-        name="Triangulate", default=False, description="Triangulate mesh after optimization"
+        name="Triangulate", default=True, description="Triangulate mesh after optimization"
     )
     
     # Source Mode Properties
