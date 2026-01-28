@@ -4,7 +4,8 @@
 > High-precision, optimized cutouts directly in Blender's Image Editor.
 
 Blender 4.2+ | [English](#english) | [日本語](#japanese)
-
+---
+![autocutpro](https://github.com/user-attachments/assets/f921a905-0993-4956-85a4-85a72ccad703)
 ---
 
 <br>
