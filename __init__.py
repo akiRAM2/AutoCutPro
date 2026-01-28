@@ -9,9 +9,17 @@ bl_info = {
 }
 
 import bpy
-from . import ui
-from . import ops
-from . import properties
+
+# Reloading logic for development
+if "bpy" in locals():
+    import importlib
+    importlib.reload(core)
+    importlib.reload(translations)
+    importlib.reload(properties)
+    importlib.reload(ui)
+    importlib.reload(ops)
+else:
+    from . import core, translations, properties, ui, ops
 
 def register():
     properties.register()
