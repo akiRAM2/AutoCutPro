@@ -2,7 +2,7 @@ bl_info = {
     "name": "Auto Cutout Pro",
     "description": "Create high-quality mesh cutouts with sub-pixel precision, holes, and smoothing.",
     "author": "akiRAM",
-    "version": (0, 9, 0),
+    "version": (0, 9, 4),
     "blender": (5, 0, 1),
     "location": "Image Editor > Sidebar > Auto Cutout Pro",
     "category": "Image",
